@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EcoGuru — Build Green. Earn Impact.</title>
-<link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -152,11 +151,11 @@ nav a:hover::after,nav a.active::after{transform:scaleX(1)}
 .section-title{font:clamp(30px,5vw,68px) 'Press Start 2P',monospace;line-height:1.18;text-shadow:5px 6px #000;margin-bottom:22px}
 .section-title span{color:#79e91d}
 .section-sub{max-width:720px;color:#d5e0d6;line-height:1.75;font-size:17px}
-.reveal{opacity:0;transform:translateY(70px) scale(.96);filter:blur(4px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1),filter .8s ease}
+.reveal{opacity:0;transform:translateY(70px) scale(.96);filter:blur(4px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1),filter .8s ease;will-change:opacity,transform,filter}
 .reveal.from-left{transform:translateX(-80px) rotateY(5deg)}
 .reveal.from-right{transform:translateX(80px) rotateY(-5deg)}
 .reveal.visible{opacity:1;transform:none;filter:none}
-.stagger>*{opacity:0;transform:translateY(35px);transition:opacity .65s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.stagger>*{opacity:0;transform:translateY(35px);transition:opacity .65s ease,transform .7s cubic-bezier(.2,.8,.2,1);will-change:opacity,transform}
 .stagger.visible>*{opacity:1;transform:none}
 .stagger.visible>*:nth-child(2){transition-delay:.08s}.stagger.visible>*:nth-child(3){transition-delay:.16s}.stagger.visible>*:nth-child(4){transition-delay:.24s}.stagger.visible>*:nth-child(5){transition-delay:.32s}
 .section-panel{background:rgba(3,12,8,.72);border:2px solid rgba(126,238,50,.34);box-shadow:12px 12px 0 rgba(0,0,0,.34),inset 0 0 45px rgba(115,240,37,.04);backdrop-filter:blur(8px);padding:28px}
@@ -608,15 +607,21 @@ guideClose?.addEventListener('click',()=>{sfx('close');guide.classList.add('guid
 
 
 // === Scroll choreography: section reveals and cinematic growth ===
+// Reversible cinematic scroll reveals: animate in when entering the viewport
+// and reset when leaving it, so the animation works smoothly every time
+// the player scrolls both DOWN and UP — with no one-time observer lockout.
 const revealObserver=new IntersectionObserver((entries)=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
       entry.target.classList.add('visible');
-      
-      revealObserver.unobserve(entry.target);
+    }else{
+      entry.target.classList.remove('visible');
     }
   });
-},{threshold:.14,rootMargin:'0px 0px -8% 0px'});
+},{
+  threshold:0.08,
+  rootMargin:'-5% 0px -10% 0px'
+});
 document.querySelectorAll('.reveal,.stagger').forEach(el=>revealObserver.observe(el));
 
 const scrollCue=document.getElementById('scrollCue');
