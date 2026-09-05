@@ -2,6 +2,7 @@
 # 🌱 EcoGuru — Build Green. Earn Impact.
 
 > A Minecraft-inspired environmental gamification website where real-world eco actions become missions, points, tree growth, and leaderboard progress.
+> live demo link: https://ecoguru-sih.vercel.app/
 
 ## 🎮 About the Project
 
